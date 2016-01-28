@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,7 +12,7 @@ namespace Runnable_Services.Interfaces
     /// </summary>
     public interface IServiceBaseStatic
     {
-        void Run(IRunnableService service);
-        void Run(IRunnableService[] services);
+        void Run(ServiceBase service);
+        void Run(ServiceBase[] services);
     }
 }

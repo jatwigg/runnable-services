@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace Runnable_Services.Interfaces
 {
-    public interface IEnvironmentStatic
+    public interface IClosingHooks
     {
-        bool UserInteractive { get; }
-
         void RegisterProcessExit(Action closeLogic);
     }
 }

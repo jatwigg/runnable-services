@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B1F91598-81D6-44CE-B4EE-1C7F08ADC971}</ProjectGuid>
+    <ProjectGuid>{C4C6D028-4F0B-4C33-9F4C-84EAF660BBC3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Runnable_Services</RootNamespace>
-    <AssemblyName>Runnable Services</AssemblyName>
+    <RootNamespace>Example_Service_2</RootNamespace>
+    <AssemblyName>Example Service 2</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -41,23 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConsoleServiceBase.cs">
+    <Compile Include="ShinyNewService.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ConsoleServiceHost.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="Implementations\ClosingHooksProxy.cs" />
-    <Compile Include="Implementations\ServiceBaseStaticProxy.cs" />
-    <Compile Include="Implementations\ServiceControllerProxy.cs" />
-    <Compile Include="Implementations\ServiceControllerStaticProxy.cs" />
-    <Compile Include="Interfaces\IClosingHooks.cs" />
-    <Compile Include="Interfaces\IServiceBaseStatic.cs" />
-    <Compile Include="Interfaces\IServiceController.cs" />
-    <Compile Include="Interfaces\IServiceControllerStatic.cs" />
-    <Compile Include="IServiceHost.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Runnable Services\Runnable Services.csproj">
+      <Project>{b1f91598-81d6-44ce-b4ee-1c7f08adc971}</Project>
+      <Name>Runnable Services</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

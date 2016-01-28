@@ -3,12 +3,13 @@ using Runnable_Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Runnable_Services
 {
-    public class ConsoleServiceHost<T> where T : IRunnableService, new()
+    public class ConsoleServiceHost<T> : IServiceHost where T : ServiceBase, new()
     {
         private T _service;
         // used in case we receive 2 exit signals
@@ -23,11 +24,8 @@ namespace Runnable_Services
             // assign or instantiate service 
             _service = serviceInstance == null ? new T() : serviceInstance;
             // if this is a console, close the service if it's installed and running and subscribe to the exit events
-            if (Environment.UserInteractive)
-            {
-                closeRunningService(_service.ServiceName);
-                Environment.RegisterProcessExit(closeLogic);
-            }
+            closeRunningService(_service.ServiceName);
+            ClosingHooks.RegisterProcessExit(closeLogic);
         }
 
         /// <summary>
@@ -69,11 +67,11 @@ namespace Runnable_Services
             }
 
             // do stop logic
-            _service.StopServiceAsUser();
+            _service.OnStop();
             return;
         }
 
-        public void Start(string[] args)
+        public void StartHostedService(string[] args = null)
         {
             // ensure that we only start it once
             lock (_serviceHasStartedLock)
@@ -86,17 +84,14 @@ namespace Runnable_Services
             }
 
             // start service as console app or service
-            if (Environment.UserInteractive)
+            if (args == null)
             {
-                _service.StartServiceAsUser(args);
+                args = new string[] { };
             }
-            else
-            {
-                ServiceBase.Run(_service);
-            }
+            _service.OnStart(args);
         }
 
-        public void Stop()
+        public void StopHostedService()
         {
             // ensure that we only start it once
             lock (_serviceHasStartedLock)
@@ -109,14 +104,7 @@ namespace Runnable_Services
             }
 
             // start service as console app or service
-            if (Environment.UserInteractive)
-            {
-                _service.StopServiceAsUser();
-            }
-            else
-            {
-                _service.Stop();
-            }
+            _service.OnStop();
         }
 
         public bool IsServiceUp
@@ -129,7 +117,7 @@ namespace Runnable_Services
                 }
             }
         }
-        public IEnvironmentStatic Environment { get; set; } = new EnvironmentStaticProxy();
+        public IClosingHooks ClosingHooks { get; set; } = new ClosingHooksProxy();
         public IServiceBaseStatic ServiceBase { get; set; } = new ServiceBaseStaticProxy();
         public IServiceControllerStatic ServiceController { get; set; } = new ServiceControllerStaticProxy();
     }

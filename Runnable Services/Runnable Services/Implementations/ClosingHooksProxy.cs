@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Runnable_Services.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Runnable_Services
+namespace Runnable_Services.Implementations
 {
-    internal static class ClosingHook
+    internal class ClosingHooksProxy : IClosingHooks
     {
         /*
             Code lifted from here: http://stackoverflow.com/a/9897366
@@ -31,5 +32,11 @@ namespace Runnable_Services
             CTRL_LOGOFF_EVENT = 5,
             CTRL_SHUTDOWN_EVENT = 6
         }
+
+        public void RegisterProcessExit(Action closeLogic)
+        {
+            AppDomain.CurrentDomain.ProcessExit += (o, _) => closeLogic(); // this event catches the program exiting by leaving the main method
+            SetConsoleCtrlHandler(c => { closeLogic(); return true; }, true); // this event catches the program ending abruptly
+        }        
     }
 }
