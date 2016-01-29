@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Example_Service_2
 {
+    /*
+    This example demonstrates a service that defines the entry point for a console application.
+        */
     public class ShinyNewService : ConsoleServiceBase
     {
         public static void Main(string[] args)
@@ -21,6 +24,16 @@ namespace Example_Service_2
 
             // stop the service
             serviceInstance.StopHostedService();
+        }
+
+        public override void StartHostedService(string[] args = null)
+        {
+            Console.WriteLine("Started service!");
+        }
+
+        public override void StopHostedService()
+        {
+            Console.WriteLine("Stopped service!");
         }
     }
 }

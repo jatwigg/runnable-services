@@ -7,22 +7,15 @@ using System.Threading.Tasks;
 
 namespace Runnable_Services
 {
-    public class ConsoleServiceBase : ServiceBase, IServiceHost
+    public abstract class ConsoleServiceBase : ServiceBase, IServiceHost
     {
-        public static T Create<T>(T service = null) where T : ConsoleServiceBase
+        public static IServiceHost Create<T>() where T : ConsoleServiceBase, new()
         {
-            // new up
-            throw new NotImplementedException();
+            return new T();
         }
 
-        public void StartHostedService(string[] args = null)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract void StartHostedService(string[] args = null);
 
-        public void StopHostedService()
-        {
-            throw new NotImplementedException();
-        }
+        public abstract void StopHostedService();
     }
 }

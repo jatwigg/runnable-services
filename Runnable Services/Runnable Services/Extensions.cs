@@ -32,13 +32,41 @@ namespace Runnable_Services
             return Environment.UserInteractive;
         }
 
+        /*
+        This needs improvement.
+            */
+        private static object _hostLock = new { lockForHosts = true };
+        private static Dictionary<int, IServiceHost> _hosts = new Dictionary<int, IServiceHost>();
+
         /// <summary>
         /// Returns an instance of the class hosting this service or null.
         /// </summary>
         /// <returns></returns>
-        public static IServiceHost GetHost()
+        public static IServiceHost GetHost(this ServiceBase service)
         {
-            throw new NotImplementedException();
+            lock (_hostLock)
+            {
+                if (_hosts.ContainsKey(service.GetHashCode()))
+                {
+                    return _hosts[service.GetHashCode()];
+                }
+            }
+            return null;
+        }
+
+        internal static void RecordHost(ServiceBase service, IServiceHost host)
+        {
+            lock(_hostLock)
+            {
+                if (_hosts.ContainsKey(service.GetHashCode()))
+                {
+                    throw new ArgumentException("An instance of this service has already been hosted.");
+                }
+                else
+                {
+                    _hosts.Add(service.GetHashCode(), host);
+                }
+            }
         }
     }
 }
