@@ -26,6 +26,9 @@ namespace Runnable_Services
             // if this is a console, close the service if it's installed and running and subscribe to the exit events
             closeRunningService(_service.ServiceName);
             ClosingHooks.RegisterProcessExit(closeLogic);
+
+            // attach the host for retrieval in the service if needed
+            this.RecordHost(_service);
         }
 
         /// <summary>

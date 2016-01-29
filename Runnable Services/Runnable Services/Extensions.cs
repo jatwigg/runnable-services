@@ -36,7 +36,7 @@ namespace Runnable_Services
         This needs improvement.
             */
         private static object _hostLock = new { lockForHosts = true };
-        private static Dictionary<int, IServiceHost> _hosts = new Dictionary<int, IServiceHost>();
+        private static Dictionary<int, WeakReference<IServiceHost>> _hosts = new Dictionary<int, WeakReference<IServiceHost>>();
 
         /// <summary>
         /// Returns an instance of the class hosting this service or null.
@@ -46,25 +46,34 @@ namespace Runnable_Services
         {
             lock (_hostLock)
             {
+                // check if it's in the list and if the object has not been garbage collected
                 if (_hosts.ContainsKey(service.GetHashCode()))
                 {
-                    return _hosts[service.GetHashCode()];
+                    var wr = _hosts[service.GetHashCode()];
+                    IServiceHost sh;
+                    if (wr.TryGetTarget(out sh))
+                    {
+                        return sh; // found it
+                    }
+                    _hosts.Remove(service.GetHashCode()); // object has been disposed of so remove this key
                 }
             }
             return null;
         }
 
-        internal static void RecordHost(ServiceBase service, IServiceHost host)
+        internal static void RecordHost(this IServiceHost host, ServiceBase service)
         {
             lock(_hostLock)
             {
-                if (_hosts.ContainsKey(service.GetHashCode()))
+                IServiceHost dontcare;
+                // if it is in the list and not disposed of, theres a problem
+                if (_hosts.ContainsKey(service.GetHashCode()) && _hosts[service.GetHashCode()].TryGetTarget(out dontcare))
                 {
                     throw new ArgumentException("An instance of this service has already been hosted.");
                 }
                 else
                 {
-                    _hosts.Add(service.GetHashCode(), host);
+                    _hosts.Add(service.GetHashCode(), new WeakReference<IServiceHost>(host)); // add to list
                 }
             }
         }
