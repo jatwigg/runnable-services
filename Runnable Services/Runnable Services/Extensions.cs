@@ -33,7 +33,7 @@ namespace Runnable_Services
         }
 
         /*
-        This needs improvement.
+        This needs implementing better.
             */
         private static object _hostLock = new { lockForHosts = true };
         private static Dictionary<int, WeakReference<IServiceHost>> _hosts = new Dictionary<int, WeakReference<IServiceHost>>();
@@ -74,6 +74,18 @@ namespace Runnable_Services
                 else
                 {
                     _hosts.Add(service.GetHashCode(), new WeakReference<IServiceHost>(host)); // add to list
+                }
+            }
+        }
+
+        internal static void RemoveHost(this IServiceHost host, ServiceBase service)
+        {
+            lock (_hostLock)
+            {
+                IServiceHost outedHost;
+                if (_hosts.ContainsKey(service.GetHashCode()) && _hosts[service.GetHashCode()].TryGetTarget(out outedHost) && outedHost == host)
+                {
+                    _hosts.Remove(service.GetHashCode());
                 }
             }
         }

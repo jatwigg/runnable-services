@@ -31,6 +31,11 @@ namespace Runnable_Services
             this.RecordHost(_service);
         }
 
+        ~ConsoleServiceHost()
+        {
+            this.RemoveHost(_service);
+        }
+
         /// <summary>
         /// Attempts to close a service by name if it's running.
         /// </summary>
