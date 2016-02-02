@@ -12,14 +12,28 @@ namespace Runnable_Services
     {
         internal static void OnStart(this ServiceBase service, string[] args)
         {
-            var m = service.GetType().GetMethod("OnStart", BindingFlags.NonPublic | BindingFlags.Instance);
-            m.Invoke(service, new object[] { args });
+            try
+            {
+                var m = service.GetType().GetMethod("OnStart", BindingFlags.NonPublic | BindingFlags.Instance);
+                m.Invoke(service, new object[] { args });
+            }
+            catch (System.Reflection.TargetInvocationException e) when (e.InnerException != null)
+            {
+                throw e.InnerException;
+            }
         }
 
         internal static void OnStop(this ServiceBase service)
         {
-            var m = service.GetType().GetMethod("OnStop", BindingFlags.NonPublic | BindingFlags.Instance);
-            m.Invoke(service, new object[] { });
+            try
+            {
+                var m = service.GetType().GetMethod("OnStop", BindingFlags.NonPublic | BindingFlags.Instance);
+                m.Invoke(service, new object[] { });
+            }
+            catch (System.Reflection.TargetInvocationException e) when (e.InnerException != null)
+            {
+                throw e.InnerException;
+            }
         }
 
         /// <summary>
@@ -63,7 +77,7 @@ namespace Runnable_Services
 
         internal static void RecordHost(this IServiceHost host, ServiceBase service)
         {
-            lock(_hostLock)
+            lock (_hostLock)
             {
                 IServiceHost dontcare;
                 // if it is in the list and not disposed of, theres a problem

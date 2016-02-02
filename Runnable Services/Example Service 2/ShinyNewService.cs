@@ -26,12 +26,11 @@ namespace Example_Service_2
             serviceInstance.StopHostedService();
         }
 
-        public override void StartHostedService(string[] args = null)
+        protected override void OnStart(string[] args)
         {
             Console.WriteLine("Started service!");
         }
-
-        public override void StopHostedService()
+        protected override void OnStop()
         {
             Console.WriteLine("Stopped service!");
         }

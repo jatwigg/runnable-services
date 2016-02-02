@@ -75,8 +75,14 @@ namespace Runnable_Services
             }
 
             // do stop logic
-            _service.OnStop();
-            return;
+            if (_service.IsHosted())
+            {
+                _service.OnStop();
+            }
+            else
+            {
+                _service.Stop();
+            }
         }
 
         public void StartHostedService(string[] args = null)
@@ -96,7 +102,17 @@ namespace Runnable_Services
             {
                 args = new string[] { };
             }
-            _service.OnStart(args);
+
+            if (_service.IsHosted())
+            {
+                _service.OnStart(args);
+                Console.WriteLine("Service started. Press <Enter> to exit . . . ");
+                Console.ReadLine();
+            }
+            else
+            {
+                ServiceBase.Run(_service);
+            }
         }
 
         public void StopHostedService()
@@ -112,7 +128,14 @@ namespace Runnable_Services
             }
 
             // start service as console app or service
-            _service.OnStop();
+            if (_service.IsHosted())
+            {
+                _service.OnStop();
+            }
+            else
+            {
+                _service.Stop();
+            }
         }
 
         public bool IsServiceUp

@@ -7,15 +7,17 @@ using System.Threading.Tasks;
 
 namespace Runnable_Services
 {
-    public abstract class ConsoleServiceBase : ServiceBase, IServiceHost
+    public class ConsoleServiceBase : ServiceBase
     {
+        //public ConsoleServiceBase()
+        //{
+        //    throw new Exception("Don't new up an instance of this class, derive your own class from it and .Create() it.");
+        //}
+
         public static IServiceHost Create<T>() where T : ConsoleServiceBase, new()
         {
-            return new T();
+            var host = new ConsoleServiceHost<T>();
+            return host;
         }
-
-        public abstract void StartHostedService(string[] args = null);
-
-        public abstract void StopHostedService();
     }
 }
