@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Runnable_Services
 {
-    public class ConsoleServiceHost<T> : IServiceHost where T : ServiceBase, new()
+    public class ConsoleServiceHost : IServiceHost
     {
-        private T _service;
+        private ServiceBase _service;
         // used in case we receive 2 exit signals
         private object _hasCaughtAnExitLock = new { ThisIsTheLockForTheCaughtAnExitBool = true };
         private bool _hasCaughtAnExit = false;
@@ -19,10 +19,13 @@ namespace Runnable_Services
         private object _serviceHasStartedLock = new { ThisIsTheLockForHasStartedBool = true };
         private bool _serviceHasStarted = false;
 
-        public ConsoleServiceHost(T serviceInstance = default(T))
+        public ConsoleServiceHost(ServiceBase serviceInstance)
         {
-            // assign or instantiate service 
-            _service = serviceInstance == null ? new T() : serviceInstance;
+            if (serviceInstance == null)
+            {
+                throw new ArgumentNullException("Service cannot be null.");
+            } 
+            _service = serviceInstance;
             // if this is a console, close the service if it's installed and running and subscribe to the exit events
             closeRunningService(_service.ServiceName);
             ClosingHooks.RegisterProcessExit(closeLogic);
@@ -34,6 +37,16 @@ namespace Runnable_Services
         ~ConsoleServiceHost()
         {
             this.RemoveHost(_service);
+        }
+
+        /// <summary>
+        /// Creates instance of service and instance of this class.
+        /// </summary>
+        /// <typeparam name="T">Service Type</typeparam>
+        /// <returns></returns>
+        public static ConsoleServiceHost Create<T>() where T : ServiceBase, new()
+        {
+            return new ConsoleServiceHost(new T());
         }
 
         /// <summary>

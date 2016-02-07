@@ -30,6 +30,7 @@ namespace Example_Service_2
         {
             Console.WriteLine("Started service!");
         }
+
         protected override void OnStop()
         {
             Console.WriteLine("Stopped service!");

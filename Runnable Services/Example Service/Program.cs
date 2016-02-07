@@ -17,7 +17,7 @@ namespace Example_Service
 
             // create the host for our type of service. If you want to instantiate the service first and pass
             // that as a parameter, thats fine.
-            var host = new ConsoleServiceHost<AdvancedMonolithicLegacyBusinessLogicServiceVersion_3>();
+            var host = ConsoleServiceHost.Create<AdvancedMonolithicLegacyBusinessLogicServiceVersion_3>();
             
             // this call will start the service. You can pass in an array of strings to simulate command line arguments if you like.
             host.StartHostedService(new string[] { "Hello Service!" });

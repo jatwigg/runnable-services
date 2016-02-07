@@ -9,15 +9,30 @@ namespace Runnable_Services
 {
     public class ConsoleServiceBase : ServiceBase
     {
-        //public ConsoleServiceBase()
-        //{
-        //    throw new Exception("Don't new up an instance of this class, derive your own class from it and .Create() it.");
-        //}
+        public ConsoleServiceBase()
+        {
+            if (this.GetType() == typeof(ConsoleServiceBase))
+            {
+                throw new Exception("Don't new up an instance of this class, derive your own class from it.");
+            }
+            Host = new ConsoleServiceHost(this);
+        }
 
+        /// <summary>
+        /// New up the service and return the host.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static IServiceHost Create<T>() where T : ConsoleServiceBase, new()
         {
-            var host = new ConsoleServiceHost<T>();
-            return host;
+            var host = new T();
+            return host.Host;
         }
+
+        /// <summary>
+        /// Get the Host for this service.
+        /// </summary>
+        public IServiceHost Host { get; private set; }
+
     }
 }

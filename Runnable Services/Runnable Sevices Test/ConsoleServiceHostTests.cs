@@ -23,7 +23,7 @@ namespace Runnable_Sevices_Test
                     }
                 };
 
-                var host = new ConsoleServiceHost<System.ServiceProcess.ServiceBase>(service);
+                var host = new ConsoleServiceHost(service);
 
                 Assert.AreEqual(0, startIterations);
                 host.StartHostedService();
@@ -54,7 +54,7 @@ namespace Runnable_Sevices_Test
                     }
                 };
 
-                var host = new ConsoleServiceHost<System.ServiceProcess.ServiceBase>(service);
+                var host = new ConsoleServiceHost(service);
 
                 Assert.AreEqual(0, stopIterations);
                 host.StartHostedService();
@@ -86,7 +86,7 @@ namespace Runnable_Sevices_Test
                     }
                 };
 
-                var host = new ConsoleServiceHost<System.ServiceProcess.ServiceBase>(service);
+                var host = new ConsoleServiceHost(service);
 
                 Assert.IsFalse(startCodeRan);
 
@@ -113,7 +113,7 @@ namespace Runnable_Sevices_Test
                     }
                 };
 
-                var host = new ConsoleServiceHost<System.ServiceProcess.ServiceBase>(service);
+                var host = new ConsoleServiceHost(service);
 
                 Assert.IsFalse(stopCodeRan);
 
@@ -139,7 +139,7 @@ namespace Runnable_Sevices_Test
 
                 };
 
-                var host = new ConsoleServiceHost<System.ServiceProcess.ServiceBase>(service);
+                var host = new ConsoleServiceHost(service);
 
                 Assert.IsFalse(host.IsServiceUp);
 
